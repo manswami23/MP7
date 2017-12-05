@@ -1,24 +1,11 @@
 package main;
-import java.util.*;
-/**
- * Class that represents players in Battlefield.
- * @author Mani, Karthik
- *
- */
 
-public class Player {
-	private Scanner scan = new Scanner(System.in);
-	/**
-	 * The name of the player.
-	 */
-	
-	private String name;
-	
-	/**
-	 * The board that represents the player's ships.
-	 */
-	
-	protected int[][] board;
+import java.util.ArrayList;
+
+
+public class CPU {
+
+	protected  int[][] board;
 	
 	/**
 	 * The list of choices that the player has already made.
@@ -32,49 +19,25 @@ public class Player {
 	
 	public static final int SHIP_SIZE = 3;
 	
-	/**
-	 * Constructs a player object.
-	 * @param name1 - the name of the player.
-	 * @param dimension - the dimension of the board.
-	 */
-	
-	public Player(final String name1) {
-		name = name1;
+	public CPU() {
 		board = createBoard(10);
-		displayBoard(board);
+
 	}
+		
 	
+	
+	
+
+
 	/**
-	 * Displays the board.
-	 * @param arr - the board to be displayed.
-	 */
-	
-	private static void displayBoard(int[][] arr) {
-		System.out.println("Here is your current board.");
-		System.out.print(" \t");
-		for (int num = 0; num < arr[0].length; num++) {
-			System.out.print(num + ".\t");
-		}
-		System.out.println();
-		for (int i = 0; i < arr.length; i++) {
-			System.out.print(i + ".\t");
-			for (int j = 0; j < arr[0].length; j++) {
-				System.out.print(arr[i][j] + "\t");
-			}
-			System.out.println();
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * Creates the board for the player.
+	 * Creates the board for the cpu.
 	 * @param dimension - the dimension of the board.
-	 * @return - the board for the player.
+	 * @return - the board for the cpu.
 	 */
 	
 	private static int[][] createBoard(final int dimension) {
 		int[][] result = new int[dimension][dimension];
-		//4 ships, two horizontal, two vertical.
+		//6 ships, three horizontal, three vertical.
 		createShipV(result);
 		createShipV(result);
 		createShipV(result);
@@ -86,7 +49,7 @@ public class Player {
 	
 	/**
 	 * Creates ships in the vertical direction on the board.
-	 * @param arr - the board for the player.
+	 * @param arr - the board for the cpu.
 	 */
 	
 	private static void createShipV(int[][] arr) {
@@ -119,7 +82,7 @@ public class Player {
 	
 	/**
 	 * Creates ships in the horizontal direction on the board.
-	 * @param arr - the board for the player.
+	 * @param arr - the board for the cpu.
 	 */
 	
 	private static void createShipH(int[][] arr) {
@@ -165,70 +128,50 @@ public class Player {
 	}
 	
 	/**
-	 * Asks the player to make a choice for the next target, and determines if that choice is valid.
-	 * @return a Choice object that represents the player's valid choice.
+	 * CPU makes a choice for the next target, and determines if that choice is valid.
+	 * @return a Choice object that represents the CPU's valid choice.
 	 */
 	
 	public Choice makeChoice() {
 		
 		int row;
 		int col;
-		System.out.println(name + ", It is your turn to choose a target. Please enter a valid row and column, between 0 and " + (board.length - 1) + ", inclusive");
-		System.out.println("Row: ");
+		row = (int) (Math.random() * board.length);
 		
-		row = Integer.parseInt(scan.nextLine());
-				
-		
-		System.out.println("Column: ");
-		
-		col = Integer.parseInt(scan.nextLine());
+		col = (int) (Math.random() * board[0].length);
 		boolean chooseAgain = checkTarget(row, col);
 		while (!chooseAgain) {
-			System.out.println("Your inputs were invalid. Please ensure that");
-			System.out.println("your input row and columns were within the range of the board.");
-			System.out.println("Also, you are not allowed to make repeat choices.");
-			System.out.println("Row: ");
+			row = (int) (Math.random() * board.length);
 			
-			row = Integer.parseInt(scan.nextLine());
-					
-			
-			System.out.println("Column: ");
-			
-			col = Integer.parseInt(scan.nextLine());
+			col = (int) (Math.random() * board[0].length);
 			chooseAgain = checkTarget(row, col);
 		}
-		System.out.println("You have made your choice to hit at row " + row + " and column " + col + ".");
+		
 		Choice next = new Choice(row, col);
 		choices.add(next);
 		
 		return(next);
 	}
 	
-	/**
-	 * Determines if computer's target was correct, and alters the board of the player if necessary.
-	 * @param row - the computer's target's row-coordinate.
-	 * @param col - the computer's target's column-coordinate.
-	 */
-	
 	public void getHit(int row, int col) {
 		if (board[row][col] == 1) {
-			System.out.println(name + ", you have been hit at row " + row + " and column "  + col + ".");
+			System.out.println("You have made a right hit.");
 			board[row][col] = 0;
-			displayBoard(board);
+			
 		}
 		else {
-			System.out.println("Whew, the CPU missed.");
-			displayBoard(board);
+			System.out.println("Oh, you have missed.");
+			
 		}
 	}
 	
 	/**
-	 * Checks if the player's target is valid, based on whether it is out of bounds of the board and based on whether the player
+	 * Checks if the cpu's target is valid, based on whether it is out of bounds of the board and based on whether the cpu
 	 * has already made the choice to go for that target. 
-	 * Players are not allowed to make the choice to go for a target for which they have already gone.
-	 * @param row - the player's target's row-coordinate.
-	 * @param col - the player's target's column-coordinate.
-	 * @return - returns whether or not the player's choice for a target is valid.
+	 * cpu is not allowed to make the choice to go for a target for which they have already gone.
+	 * @param row - the cpu's target's row-coordinate.
+	 * @param col - the cpu's target's column-coordinate.
+	 * @return - returns whether or not the cpu's choice for a target is valid.
 	 */
 	
 	public boolean checkTarget(int row, int col) {
@@ -244,7 +187,5 @@ public class Player {
 			}
 		}	
 		return true;
-		
-	}
-
+	}	
 }

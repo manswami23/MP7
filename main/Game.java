@@ -4,20 +4,52 @@ public class Game {
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		String name;
-		int dimension;
-		System.out.println("Hello player. Welcome to Battlefield. Enter your name and desired board dimension. We recommend 8.");
-		System.out.println("Anything above 8 might be too slow.");
+
+		System.out.println("Hello player. Welcome to Battlefield. Enter your name.");
 		System.out.println("Name: ");
 		name = scan.nextLine();
-		System.out.println("Dimension (Enter only one number): "); 
-		dimension = scan.nextInt();
-		Player player = new Player(name, dimension);
+		
+		Player player = new Player(name);
+		CPU cpu = new CPU();
+		while (!checkGameOver(player.board, cpu.board)) {
+			Choice temp = player.makeChoice();
+			cpu.getHit(temp.getRow(), temp.getCol());
+			Choice temp1 = cpu.makeChoice();
+			player.getHit(temp1.getRow(), temp1.getCol());
+			
+		}
+		
 		
 	}
-	private boolean checkGameOver(final int[][] playerB, final int[][] computerB) {
+	private static boolean checkGameOver(final int[][] playerB, final int[][] computerB) {
 		boolean playerL = true;
 		boolean computerL = true;
+		int playerCount = 0;
+		int cpuCount = 0;
 		for (int i = 0; i < playerB.length; i++) {
+			for (int j = 0; j < playerB[0].length; j++) {
+				playerCount += playerB[i][j];
+			}
+		}
+		for (int i = 0; i < computerB.length; i++) {
+			for (int j = 0; j < computerB[0].length; j++) {
+				cpuCount += computerB[i][j];
+			}
+		}
+	
+		if (playerCount > 0 && cpuCount > 0) {
+			return false;
+		}
+		else if (playerCount == 0) {
+			System.out.println("The player has lost. Game over.");
+			return true;
+		}
+		else {
+			System.out.println("The computer has lost. The player has won. Good job.");
+			return true;
+		}
+		
+		/**for (int i = 0; i < playerB.length; i++) {
 			for (int j = 0; j > playerB[0].length; j++) {
 				if (playerB[i][j] == 1) {
 					 playerL = false;
@@ -47,6 +79,6 @@ public class Game {
 			System.out.println("The computer has lost. The player has won. Good job.");
 			return true;
 		}
-		return false;
+		return false;*/
 	}
 }	
