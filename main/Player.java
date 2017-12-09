@@ -8,28 +8,50 @@ import java.util.*;
 
 public class Player {
 	private Scanner scan = new Scanner(System.in);
+	
 	/**
 	 * The name of the player.
 	 */
-	
 	private String name;
 	
 	/**
 	 * The board that represents the player's ships.
 	 */
-	
 	protected int[][] board;
+	
+	/**
+	 * The board represents the players choices.
+	 */
+	protected char[][] choicesBoard;
+	
+	
+	/**
+	 * Fills in the board with '.''s
+	 */
+	public static char[][] initialBoard(final int[][] arr, final int dimension) {
+		char[][] choices = new char[dimension][dimension];
+		
+		for (int i = 0; i < choices.length; i++) {
+			for (int j = 0; j < choices[i].length; j++) {
+				if (arr[i][j] == 1) {
+					choices[i][j] = 'S';
+				} else if (arr[i][j] == 0) {
+					choices[i][j] = '.';
+				}
+			}
+		}
+		return choices;
+	}
+	
 	
 	/**
 	 * The list of choices that the player has already made.
 	 */
-	
 	private ArrayList<Choice> choices = new ArrayList<Choice>();
 	
 	/**
 	 * The size of the ships.
 	 */
-	
 	public static final int SHIP_SIZE = 3;
 	
 	/**
@@ -37,19 +59,19 @@ public class Player {
 	 * @param name1 - the name of the player.
 	 * @param dimension - the dimension of the board.
 	 */
-	
 	public Player(final String name1) {
 		name = name1;
 		board = createBoard(10);
-		displayBoard(board);
+		choicesBoard = initialBoard(board, 10);
+		displayBoard(choicesBoard);
 	}
+	
 	
 	/**
 	 * Displays the board.
 	 * @param arr - the board to be displayed.
 	 */
-	
-	private static void displayBoard(int[][] arr) {
+	/**private static void displayBoard(int[][] arr) {
 		System.out.println("Here is your current board.");
 		System.out.print(" \t");
 		for (int num = 0; num < arr[0].length; num++) {
@@ -64,6 +86,27 @@ public class Player {
 			System.out.println();
 			System.out.println();
 		}
+	} */
+
+	
+	 /** Displays the board.
+	 * @param arr - the board to be displayed.
+	 */
+	private static void displayBoard(char[][] arr) {
+		System.out.print(" \t");
+		for (int num = 0; num < arr[0].length; num++) {
+			System.out.print("\t");
+		}
+		System.out.println();
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print("\t");
+			for (int j = 0; j < arr[0].length; j++) {
+				System.out.print(arr[i][j] + "\t");
+			}
+			System.out.println();
+			System.out.println();
+		}
+		System.out.println("Here is your current board.");
 	}
 	
 	/**
@@ -71,7 +114,6 @@ public class Player {
 	 * @param dimension - the dimension of the board.
 	 * @return - the board for the player.
 	 */
-	
 	private static int[][] createBoard(final int dimension) {
 		int[][] result = new int[dimension][dimension];
 		//4 ships, two horizontal, two vertical.
@@ -88,7 +130,6 @@ public class Player {
 	 * Creates ships in the vertical direction on the board.
 	 * @param arr - the board for the player.
 	 */
-	
 	private static void createShipV(int[][] arr) {
 		int startR = createC(arr.length);
 		int startC = createC(arr.length);
@@ -121,7 +162,6 @@ public class Player {
 	 * Creates ships in the horizontal direction on the board.
 	 * @param arr - the board for the player.
 	 */
-	
 	private static void createShipH(int[][] arr) {
 		int startR = createC(arr.length);
 		int startC = createC(arr.length);
@@ -155,7 +195,6 @@ public class Player {
 	 * @param dimension - the dimension of the board.
 	 * @return either the row-coordinate or the column-coordinate.
 	 */
-	
 	private static int createC(final int dimension) {
 		int result = (int) (Math.random() * dimension);
 		while ((result + SHIP_SIZE) > dimension - 1) {
@@ -168,7 +207,6 @@ public class Player {
 	 * Asks the player to make a choice for the next target, and determines if that choice is valid.
 	 * @return a Choice object that represents the player's valid choice.
 	 */
-	
 	public Choice makeChoice() {
 		
 		int row;
@@ -209,16 +247,15 @@ public class Player {
 	 * @param row - the computer's target's row-coordinate.
 	 * @param col - the computer's target's column-coordinate.
 	 */
-	
 	public void getHit(int row, int col) {
 		if (board[row][col] == 1) {
-			System.out.println(name + ", you have been hit at row " + row + " and column "  + col + ".");
 			board[row][col] = 0;
-			displayBoard(board);
-		}
-		else {
+			choicesBoard[row][col] = 'X';
+			displayBoard(choicesBoard);
+			System.out.println(name + ", you have been hit at row " + row + " and column "  + col + "!");
+		} else {
 			System.out.println("Whew, the CPU missed.");
-			displayBoard(board);
+			choicesBoard[row][col] = 'O';
 		}
 	}
 	
@@ -230,7 +267,6 @@ public class Player {
 	 * @param col - the player's target's column-coordinate.
 	 * @return - returns whether or not the player's choice for a target is valid.
 	 */
-	
 	public boolean checkTarget(int row, int col) {
 		if (row < 0 || row > board.length - 1 || col < 0 || col > board[0].length - 1) {
 			return false;

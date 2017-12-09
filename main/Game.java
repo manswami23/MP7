@@ -1,6 +1,16 @@
 package main;
 import java.util.*;
+
+/**
+ * The Game class implements the game in the console.
+ * @author Mani, Karthik
+ *
+ */
 public class Game {
+	/**
+	 * The main method runs the game in the console.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
 		String name;
@@ -15,12 +25,19 @@ public class Game {
 			Choice temp = player.makeChoice();
 			cpu.getHit(temp.getRow(), temp.getCol());
 			Choice temp1 = cpu.makeChoice();
-			player.getHit(temp1.getRow(), temp1.getCol());
-			
+			player.getHit(temp1.getRow(), temp1.getCol());	
 		}
-		
-		
 	}
+	
+	
+	/**
+	 * chechGameOver checks the player's and CPU's board to check if the game is over.
+	 * Returns false if playerCount or cpuCount is greater than zero.
+	 * Returns true if playerCount or cpuCount is zero and prints output accordingly.
+	 * @param playerB - Player's board
+	 * @param computerB - Computer's board
+	 * @return true or false.
+	 */
 	private static boolean checkGameOver(final int[][] playerB, final int[][] computerB) {
 		boolean playerL = true;
 		boolean computerL = true;
@@ -39,12 +56,10 @@ public class Game {
 	
 		if (playerCount > 0 && cpuCount > 0) {
 			return false;
-		}
-		else if (playerCount == 0) {
+		} else if (playerCount == 0) {
 			System.out.println("The player has lost. Game over.");
 			return true;
-		}
-		else {
+		} else {
 			System.out.println("The computer has lost. The player has won. Good job.");
 			return true;
 		}
