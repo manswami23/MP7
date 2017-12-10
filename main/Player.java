@@ -95,11 +95,11 @@ public class Player {
 	private static void displayBoard(char[][] arr) {
 		System.out.print(" \t");
 		for (int num = 0; num < arr[0].length; num++) {
-			System.out.print("\t");
+			System.out.print(num + ".\t");
 		}
 		System.out.println();
 		for (int i = 0; i < arr.length; i++) {
-			System.out.print("\t");
+			System.out.print(i + ".\t");
 			for (int j = 0; j < arr[0].length; j++) {
 				System.out.print(arr[i][j] + "\t");
 			}
@@ -209,32 +209,32 @@ public class Player {
 	 */
 	public Choice makeChoice() {
 		
-		int row;
-		int col;
 		System.out.println(name + ", It is your turn to choose a target. Please enter a valid row and column, between 0 and " + (board.length - 1) + ", inclusive");
 		System.out.println("Row: ");
 		
-		row = Integer.parseInt(scan.nextLine());
+		String input1 = scan.nextLine();
 				
 		
 		System.out.println("Column: ");
 		
-		col = Integer.parseInt(scan.nextLine());
-		boolean chooseAgain = checkTarget(row, col);
+		String input2 = scan.nextLine();
+		boolean chooseAgain = checkTarget(input1, input2);
 		while (!chooseAgain) {
 			System.out.println("Your inputs were invalid. Please ensure that");
 			System.out.println("your input row and columns were within the range of the board.");
 			System.out.println("Also, you are not allowed to make repeat choices.");
 			System.out.println("Row: ");
 			
-			row = Integer.parseInt(scan.nextLine());
+			input1 = scan.nextLine();
 					
 			
 			System.out.println("Column: ");
 			
-			col = Integer.parseInt(scan.nextLine());
-			chooseAgain = checkTarget(row, col);
+			input2 = scan.nextLine();
+			chooseAgain = checkTarget(input1, input2);
 		}
+		int row = Integer.parseInt(input1);
+		int col = Integer.parseInt(input2);
 		System.out.println("You have made your choice to hit at row " + row + " and column " + col + ".");
 		Choice next = new Choice(row, col);
 		choices.add(next);
@@ -267,10 +267,16 @@ public class Player {
 	 * @param col - the player's target's column-coordinate.
 	 * @return - returns whether or not the player's choice for a target is valid.
 	 */
-	public boolean checkTarget(int row, int col) {
+	public boolean checkTarget(String input1,  String input2) {
+		if (input1.equals("") || input1.equals("\n") || input2.equals("") || input2.equals("\n")) {
+			return false;
+		}
+		int row = Integer.parseInt(input1);
+		int col = Integer.parseInt(input2);
 		if (row < 0 || row > board.length - 1 || col < 0 || col > board[0].length - 1) {
 			return false;
 		}
+		
 		if (choices.size() > 0) {
 			Choice target = new Choice(row, col);
 			for (Choice item: choices) {
